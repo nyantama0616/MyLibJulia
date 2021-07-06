@@ -1,6 +1,6 @@
 # ヒープ
 module MyHeap
-    export Heap, add!, remove!
+    export Heap, add!, remove!, __peek
 
     struct Heap{T}
         cont::Array{T, 1}　#ヒープ化された配列を持つ
@@ -76,11 +76,19 @@ module MyHeap
         end
         result
     end
+
+    # 次に取り出す要素を確認
+    function __peek(heap::Heap{T}) where T
+        if !isempty(heap.cont)
+            return heap.cont[1]
+        end
+    end
 end
 
 # BIT
 module MyBinaryIndexedTree
-    export Node, BinaryIndexedTree, set_interval_sum!, update_at!, increase_at!, calc_sum, show_detail
+    export Node, BinaryIndexedTree, get_values, get_interval_sums
+    export set_interval_sum!, update_at!, increase_at!, calc_sum, show_detail
     # ノード
     mutable struct Node{T}
         value::T
@@ -105,10 +113,18 @@ module MyBinaryIndexedTree
         BinaryIndexedTree{T}(bits, len)
     end
 
+    function get_values(tree::BinaryIndexedTree{T}) where T
+        map(node -> node.value, tree.bits)
+    end
+    
+    function get_interval_sums(tree::BinaryIndexedTree{T}) where T
+        map(node -> node.interval_sum, tree.bits)
+    end
+
     # すべての区間和を計算
     function set_interval_sum!(tree::BinaryIndexedTree{T}) where T
         bits = tree.bits
-        len = length(bits)
+        len = tree.len
         for i in 1:len
             node = bits[i]
             lsb = node.lsb
@@ -123,8 +139,8 @@ module MyBinaryIndexedTree
     # 一つのノードのvalueを更新
     function update_at!(tree::BinaryIndexedTree{T}, i::Int, x::T) where T
         bits = tree.bits
-        len = length(bits)
-        diff = x - bits[i].interval_sum
+        len = tree.len
+        diff = x - bits[i].value
         bits[i].value = x
         while i <= len
             node = bits[i]
@@ -136,7 +152,7 @@ module MyBinaryIndexedTree
     # 一つのノードのvalueをインクリメント
     function increase_at!(tree::BinaryIndexedTree{T}, i::Int, x::T) where T
         bits = tree.bits
-        len = length(bits)
+        len = tree.len
         bits[i].value += x
         while i <= len
             node = bits[i]
@@ -156,10 +172,10 @@ module MyBinaryIndexedTree
         end
         result
     end
-
-    # 確認用
-    function show_detail(tree::BinaryIndexedTree{T}) where T
-        println(map((x) -> x.interval_sum, tree.bits))
-    end
-
 end
+
+# TODO:
+    # BITの区間和ver と 区間最小値verを、モジュールを分けて実装したい。
+# -----commingsooon-------
+
+# セグメントツリー
