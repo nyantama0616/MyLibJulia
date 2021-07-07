@@ -4,7 +4,8 @@
     Int型しかテストしてない。
 =#
 
-include("../structure.jl")
+include("../heap.jl")
+
 using Test
 using .MyHeap
 

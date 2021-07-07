@@ -1,4 +1,5 @@
-include("../structure.jl")
+include("../binary_indexed_tree.jl")
+
 using Test
 using .MyBinaryIndexedTree
 
