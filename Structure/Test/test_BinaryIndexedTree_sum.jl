@@ -18,7 +18,7 @@ using .MyBinaryIndexedTree
     for i in 1:1000
         @testset "1~iまでの総和" begin
             rng = -10^3:10^3
-            a = rand(rng, 10)
+            a = rand(rng, rand(10:100))
             tree = BinaryIndexedTree{Int}(a)
             set_interval_sum!(tree)
 

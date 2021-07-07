@@ -126,13 +126,17 @@ module MyBinaryIndexedTree
         bits = tree.bits
         len = tree.len
         for i in 1:len
-            node = bits[i]
-            lsb = node.lsb
-            j = 0
-            while j < lsb
-                node.interval_sum += bits[i - j].value
-                j += 1
+            node1 = bits[i]
+            node1.interval_sum = node1.value
+
+            j = i - 1
+            k = i - node1.lsb
+            while j > k
+                node2 = bits[j]
+                node1.interval_sum += node2.interval_sum
+                j -= node2.lsb
             end
+
         end
     end
 
